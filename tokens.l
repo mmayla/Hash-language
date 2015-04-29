@@ -1,8 +1,6 @@
 %{
-#include <string>
+#include <stdio.h>
 
-#define SAVE_TOKEN  yylval.string = new std::string(yytext, yyleng)
-#define TOKEN(t)    (yylval.token = t)
 %}
 
 %option noyywrap
@@ -10,8 +8,9 @@
 %%
 
 [ \t\n]					        ;
-[a-zA-Z_][a-zA-Z0-9_]*  		SAVE_TOKEN; return TIDENTIFIER;
-[0-9]+|[0-9]+\.[0-9]*			SAVE_TOKEN; return TNUMBER;
-"{"         				return TOKEN(TLBRACE);
-"}"					return TOKEN(TRBRACE);
+[a-zA-Z_][a-zA-Z0-9_]*  		printf("TIDENTIFIER ");
+[0-9]+|[0-9]+\.[0-9]*			printf("TNUMBER ");
+"{"         				printf("TOCBRACE ");
+"}"					printf("TCCBRACE ");
+.+					printf("Undefined token");
 %%
