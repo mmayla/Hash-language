@@ -35,38 +35,18 @@
 "+"    printf( "TADD" );
 
 "-"    printf( "TSUB" );
-
 "*"   printf( "TMUL" );
-
 "/"   printf( "TDIV" );
-
 "!"   printf( "TNOT" );
-
 "=="    printf( "TEQUAL" );
-
 "!="   printf( "TNOTEQUAL" );
-
 ">"   printf( "TGREATER" );
-
 ">="    printf( "TGREATEREQUAL" );
-
 "<"    printf( "TLESS" );
-
 "<="   printf( "TLESSEQUAL" );
-
 "&"   printf( "TBWAND"  );
-
 "|"   printf( "TBWOR"  );
-
 "^"   printf( "TXOR"  );
-
 "**"   printf( "TPOWER"  );
-
-
-
 .+	printf("Undefined token");
-
-
-
 %%
-
