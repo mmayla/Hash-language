@@ -10,5 +10,15 @@
 [0-9]+|[0-9]+\.[0-9]*			printf("TNUMBER ");
 "{"         				printf("TOCBRACE ");
 "}"					printf("TCCBRACE ");
-.+					printf("Undefined token");
+"\""					printf("TDOUBLEQUOTES ");
+"'"					printf("TSINGLEQUOTE ");
+"\\"					printf("TBACKSLASH ");
+"/"					printf("TFORWARDSLASH ");
+"("					printf("TORBRACKET ");
+")"					printf("TCRBRACKET ");
+"["					printf("TOSBRACKET ");
+"]"					printf("TCSBRACKET ");
+\".*\"					printf("TSTRING ");
+.					printf("Undefined token ");
+
 %%
