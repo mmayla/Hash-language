@@ -1,9 +1,5 @@
-
-
 %option noyywrap
-
 %{
-
 #include <stdio.h>
 
 
@@ -69,6 +65,8 @@
 
 
 .+	printf("Undefined token");
+
+
 
 %%
 
