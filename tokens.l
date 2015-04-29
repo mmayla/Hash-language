@@ -14,11 +14,11 @@
 
 [ \t\n]					        ;
 
-"switch"   printf( "TSWITCH"  );
+"@"   printf( "TAT"  );
 
 "?"   printf( "TSWITCHCOND"  );
 
-"leave"   printf( "TSWITCHLEAVE"  );
+"leave"   printf( "TBREAK"  );
 
 "default"   printf( "TSWITCHDEFAULT"  );
 
