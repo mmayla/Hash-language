@@ -70,6 +70,6 @@ i = 0
 //Bitwise operators
 &
 |
-^  //XOR
-** //power i.e. 2**4 = 16 
+**  //XOR
+^ //power i.e. 2**4 = 16 
 
