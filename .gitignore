@@ -1,4 +1,3 @@
-*.yy.c
-tokens
-*.exe
 *~
+*.out
+*parsetab.py
