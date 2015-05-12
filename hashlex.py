@@ -6,7 +6,7 @@ import ply.lex as lex
 
 tokens = (
     # Reserved
-    'NUMBER', 'STRING', 'BOOLEAN','NO',
+    'NUMBER', 'STRING', 'BOOLEAN','ELSE','TRUE','FALSE',
     
 	# Literals (identifier, number, string, boolean)
     'ID', 'NCONST', 'SCONST', 'BCONST',
@@ -36,10 +36,12 @@ def t_NEWLINE(t):
     t.lexer.lineno += t.value.count("\n")
 
 # Reserved
-t_NUMBER              = r'\$NUMBER'
+t_NUMBER           = r'\$NUMBER'
 t_STRING           = r'\$STRING'
 t_BOOLEAN          = r'\$BOOLEAN'
-t_NO               = r'NO'
+t_ELSE             = r'\$NO'
+t_TRUE             = r'\$LIKE'
+t_FALSE            = r'\$DISLIKE' 
 
 # Operators
 t_PLUS             = r'\+'
@@ -119,4 +121,4 @@ while True:
 	for tok in lexer:
 		#print(tok)
 		print(tok.type, tok.value, tok.lineno, tok.lexpos)
-'''                
+'''                       

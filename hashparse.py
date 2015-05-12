@@ -5,6 +5,12 @@ import ply.yacc as yacc
 # get tokens
 tokens = hashlex.tokens
 
+#logical expressions
+def p_logical_expression(p):
+    ''
+    print("logical expr.")
+    pass
+    
 # assignment expressions
 def p_assignment_expression_1(p):
     'assignment_expression : decleration EQUALS arithmatic_expression'
