@@ -23,7 +23,7 @@ i = 0
 	i = i+1
 } i<=5 ?
 
-## k Number=0, k<5, k=k+1 ?{	//for loop
+## k Number=0, k<5?, k=k+1 {	//for loop
 	sout_var = k
 }
 

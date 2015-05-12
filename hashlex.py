@@ -3,11 +3,11 @@ sys.path.insert(0,"../..")
 
 import ply.lex as lex
 
-reserved = (
-	'Number', 'String', 'Boolean',
-	)
 
-tokens = reserved + (
+tokens = (
+    # Reserved
+    'NUMBER', 'STRING', 'BOOLEAN','NO',
+    
 	# Literals (identifier, number, string, boolean)
     'ID', 'NCONST', 'SCONST', 'BCONST',
     
@@ -34,7 +34,13 @@ t_ignore           = ' \t\x0c'
 def t_NEWLINE(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
-    
+
+# Reserved
+t_NUMBER              = r'\$NUMBER'
+t_STRING           = r'\$STRING'
+t_BOOLEAN          = r'\$BOOLEAN'
+t_NO               = r'NO'
+
 # Operators
 t_PLUS             = r'\+'
 t_MINUS            = r'-'
@@ -74,14 +80,12 @@ t_COLON            = r':'
 
 # Literals
 
-reserved_map = { }
-for r in reserved:
-    reserved_map[r.lower()] = r
     
 def t_ID(t):
-    r'[A-Za-z_][\w_]*'
-    t.type = reserved_map.get(t.value,"ID")
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
     return t
+    
+
     
 # Number literal
 t_NCONST = """(\d+(\.\d*)?|\.\d+)([eE][-+]? \d+)?"""
@@ -108,9 +112,11 @@ def t_error(t):
 lexer = lex.lex()
 
 # Tokenize
+'''
 while True:
-	s = raw_input('> ')
+	s = raw_input('l> ')
 	lexer.input(s)
 	for tok in lexer:
 		#print(tok)
 		print(tok.type, tok.value, tok.lineno, tok.lexpos)
+'''                
