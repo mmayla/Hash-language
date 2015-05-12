@@ -4,7 +4,7 @@ sys.path.insert(0,"../..")
 import ply.lex as lex
 
 reserved = (
-	'NUMBER', 'STRING', 'BOOLEAN',
+	'Number', 'String', 'Boolean',
 	)
 
 tokens = reserved + (
@@ -102,5 +102,11 @@ def t_error(t):
     t.lexer.skip(1)
     
 lexer = lex.lex()
-if __name__ == "__main__":
-    lex.runmain(lexer)
+
+# Tokenize
+while True:
+	s = raw_input('> ')
+	lexer.input(s)
+	for tok in lexer:
+		#print(tok)
+		print(tok.type, tok.value, tok.lineno, tok.lexpos)
