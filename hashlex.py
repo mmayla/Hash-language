@@ -91,11 +91,15 @@ t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
 
 # Boolean literal
 t_BCONST = r'like|dislike'
-
-# Preprocessor directive (ignored)
-def t_preprocessor(t):
-    r'\#(.)*?\n'
-    t.lexer.lineno += 1
+    
+def t_COMMENT(t):
+    r'//*'
+    pass
+    
+# tracking line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
     
 def t_error(t):
     print("Illegal character %s" % repr(t.value[0]))
