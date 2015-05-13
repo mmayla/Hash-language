@@ -5,7 +5,20 @@ import ply.yacc as yacc
 # get tokens
 tokens = hashlex.tokens
 
+
+def p_if_statement(p):
+    ''' if_statement : HASH logical_expression compound_statement
+                     | HASH logical_expression compound_statement ELSE compound_statement
+                     '''
+    print("if statement")
+    pass
+
 # statements
+def p_compound_statement(p):
+    ' compound_statement : LBRACE statements_list RBRACE '
+    print("compound statement")
+    pass
+
 def p_statements_list(p):
     ''' statements_list : statement statements_list
                        | statement
