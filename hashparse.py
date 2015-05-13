@@ -1,11 +1,14 @@
 import sys
 import hashlex
 from ast import Node
+import generator
 import ply.yacc as yacc
 
 # get tokens
 tokens = hashlex.tokens
 
+#define generator
+codegenerator = generator.Generator()
 
 # statement
 #TODO support (exp) 
@@ -23,7 +26,7 @@ def p_statements_list(p):
 
 def p_compound_statement(p):
     ' compound_statement : LBRACE statements_list RBRACE '
-    print("compound statement")
+    #print("compound statement")
     p[0] = Node('compound_statement',None,p[2])
     pass
 
@@ -62,7 +65,6 @@ def p_iteration_statement_3(p):
     pass
 
 #conditional statements
-# FIXME NO { } not defined
 def p_if_statement(p):
     ''' if_statement : HASH logical_expression compound_statement
                      | HASH logical_expression compound_statement ELSE compound_statement
@@ -125,7 +127,8 @@ def p_assignment_expression_1(p):
                               | ID EQUALS arithmatic_expression
                               '''
     print("assig. expr. 1")
-    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
     pass
 
 def p_assignment_expression_2(p):
@@ -133,7 +136,8 @@ def p_assignment_expression_2(p):
                               | ID EQUALS const_literal
                               '''
     print("assig. expr. 2")
-    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
+    p[0] = p[1]
+    
     pass
 
 def p_assignment_expression_3(p):
@@ -158,10 +162,11 @@ def p_logical_expression(p):
     if len(p)==5:
         p[0] = Node('logical_expression',[p[1],p[3]],p[2])
     else :
-        p[0] = Node('logical_expression',None,p[1])
+        p[0] = p[1]
     pass
   
 # arithmatic expressions
+# FIXME 5=5, 6<5 -> LHS=ID
 def p_arithmatic_expression(p):
     '''arithmatic_expression : ID arithmatic_operator arithmatic_expression
                              | NCONST arithmatic_operator arithmatic_expression
@@ -170,15 +175,21 @@ def p_arithmatic_expression(p):
                              '''
     print("Arth. Exp.")
     if len(p)==4:
-        p[0] = Node('arithmatic_expression',[p[1],p[3]],p[2])
+        p[0] = p[1]
     else:
-        p[0] = Node('arithmatic_expression',None,p[1])
+        if p[1]=="ID":
+            p[0] = p[1]
+        else:
+            codegenerator.registers.append(str(p[1]))
+            p[0] = "R"+str(len(codegenerator.registers)-1)
+            codegenerator.addAssembly("MOV "+p[0]+","+str(p[1]))
     pass
 
 def p_decleration(p):
     ' decleration : ID data_type'
     print("decleration")
-    p[0] = Node('decleration',[p[2]],p[1])
+    p[0] = p[1]
+    codegenerator.addAssembly(str(p[1])+" "+p[2])
     pass
 
 # Operators   
@@ -194,7 +205,7 @@ def p_logical_operator(p):
                          | NE
                          '''
     print("log. opr.")
-    p[0] = Node('logical_operator',None,p[1])
+    p[0] = p[1]
     pass
   
 def p_arithmatic_operator(p):
@@ -209,13 +220,14 @@ def p_arithmatic_operator(p):
                             | XOR
                             '''
     print("arith. opr.")
-    p[0] = Node('arithmatic_operator',None,p[1])
+    p[0] = p[1]
     pass
 
 def p_const_literal(p):
     ''' const_literal : SCONST
                       '''
-    p[0] = Node('const_literal',None,p[1])
+    print("const. lit.")
+    p[0] = p[1]
     pass
   
 def p_data_type(p):
@@ -224,7 +236,7 @@ def p_data_type(p):
                   | BOOLEAN
                   '''
     print("data_type")
-    p[0] = Node('data_type',None,p[1])
+    p[0] = p[1]
     pass
     
 ################ Testing Parser ################ 
@@ -236,48 +248,13 @@ fn_var $NUMBER = 3.14
 str_var $STRING = "I am a \"string\" \n"
 sout_var $STRING
 bool_var $BOOLEAN = $like
-
-
-# in_var < fn_var ? {
-	sout_var = "first less than second"
-} $NO {
-	sout_var = "second less than first"
-}
-
-i $NUMBER = 0
-## i <= 5 ? {
-	sout_var = i
-	i = i+1
-}
-
-i = 0
-## {
-	sout_var = i
-	i = i+1
-} i<=5 ?
-
-## k $NUMBER=0, k<5?, k=k+1 {
-	sout_var = k
-}
-
-@i@{
-	1 ? 
-		sout_var = "i = 1"
-	$leave
-	
-	2?
-		sout_var = "i = 2"
-	$leave
-
-	$failed ?
-		sout_var = "not found"
-	$leave
-}
 '''
 
 yacc.yacc()
 
 yacc.parse(code)
+
+codegenerator.printAssembly()
 
 '''
 while 1:
