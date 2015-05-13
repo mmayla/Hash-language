@@ -193,6 +193,8 @@ bool_var $BOOLEAN = $like
 
 # in_var < fn_var ? {
 	sout_var = "first less than second"
+} $NO {
+	sout_var = "second less than first"
 }
 
 i $NUMBER = 0
