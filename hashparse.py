@@ -5,6 +5,21 @@ import ply.yacc as yacc
 # get tokens
 tokens = hashlex.tokens
 
+# statements
+def p_statements_list(p):
+    ''' statements_list : statement statements_list
+                       | statement
+                       '''
+    print("statements list")
+    pass
+
+def p_statement(p):
+    ''' statement : assignment_expression
+                  | decleration
+                  '''
+    print("statement")
+    pass
+
 # assignment expressions
 def p_assignment_expression_1(p):
     ''' assignment_expression : decleration EQUALS arithmatic_expression
@@ -29,9 +44,10 @@ def p_assignment_expression_5(p):
 
 #logical expressions
 def p_logical_expression(p):
-    ''' logical_expression : ID logical_operator BCONST
-                           | ID logical_operator ID
-                           | BCONST logical_operator ID
+    ''' logical_expression : ID logical_operator BCONST COND
+                           | ID logical_operator ID COND
+                           | BCONST logical_operator ID COND
+                           | BCONST
                            '''
     print("logical expr.")
     pass
