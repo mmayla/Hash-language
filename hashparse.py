@@ -1,5 +1,6 @@
 import sys
 import hashlex
+from ast import Node
 import ply.yacc as yacc
 
 # get tokens
@@ -14,11 +15,16 @@ def p_statements_list(p):
                         | statement
                         '''
     print("statements list")
+    if len(p)==3:
+        p[0] = Node('statements_list',[p[2]],p[1])
+    else:
+        p[0] = Node('statements_list',None,p[1])
     pass
 
 def p_compound_statement(p):
     ' compound_statement : LBRACE statements_list RBRACE '
     print("compound statement")
+    p[0] = Node('compound_statement',None,p[2])
     pass
 
 def p_statement(p):
@@ -29,6 +35,7 @@ def p_statement(p):
                   | iteration_statement
                   '''
     print("statement")
+    p[0] = Node('iteration_statement',None,p[1])
     pass
 
 # iteration statements
@@ -36,6 +43,7 @@ def p_statement(p):
 def p_iteration_statement_1(p):
     ' iteration_statement : HASH HASH logical_expression compound_statement '
     print("itr. stmnt. 1 - while")
+    p[0] = Node('iteration_statement',[p[4]],p[3])
     pass
 
 # for statement
@@ -43,12 +51,14 @@ def p_iteration_statement_1(p):
 def p_iteration_statement_2(p):
     ' iteration_statement : HASH HASH assignment_expression COMMA logical_expression COMMA assignment_expression compound_statement '
     print("itr. stmnt. 2 - for")
+    p[0] = Node('iteration_statement',[p[3],p[7],p[8]],p[5])
     pass
 
 # repeat until statement
 def p_iteration_statement_3(p):
     ' iteration_statement : HASH HASH compound_statement logical_expression '
     print("itr. stmnt. 3 - repeat-until")
+    p[0] = Node('iteration_statement',[p[4]],p[3])
     pass
 
 #conditional statements
@@ -58,6 +68,10 @@ def p_if_statement(p):
                      | HASH logical_expression compound_statement ELSE compound_statement
                      '''
     print("if statement")
+    if len(p)==6:
+        p[0] = Node('switch_statement',[p[3],p[5]],p[2])
+    else:
+        p[0] = Node('switch_statement',[p[3]],p[2])  
     pass
 
 # switch statement
@@ -66,6 +80,10 @@ def p_switch_statement(p):
                          | AT ID AT LBRACE switch_statement_body RBRACE
                          '''
     print("switch statement")
+    if len(p)==8:
+        p[0] = Node('switch_statement',[p[5],p[6]],p[2])
+    else:
+        p[0] = Node('switch_statement',[p[5]],p[2])    
     pass
 
 def p_switch_statement_body(p):
@@ -73,6 +91,10 @@ def p_switch_statement_body(p):
                               | switch_statement_case
                               '''
     print("switch stmnt body")
+    if len(p)==3:
+        p[0] = Node('switch_statement_body',[p[2]],p[1])
+    else:
+        p[0] = Node('switch_statement_body',None,p[1])
     pass
 
 def p_switch_statement_case(p):
@@ -80,6 +102,10 @@ def p_switch_statement_case(p):
                               | NCONST COND statements_list
                               '''
     print("switch stmnt case")
+    if len(p)==5:
+        p[0] = Node('switch_statement_default',[p[3],p[4]],p[1])
+    else:
+        p[0] = Node('switch_statement_default',[p[3]],p[1])
     pass
 
 def p_switch_statement_default(p):
@@ -87,6 +113,10 @@ def p_switch_statement_default(p):
                                  | DEFAULT COND statements_list
                                  '''
     print("switch stmnt default")
+    if len(p)==5:
+        p[0] = Node('switch_statement_default',[p[3],p[4]],p[1])
+    else:
+        p[0] = Node('switch_statement_default',[p[3]],p[1])
     pass
 
 # assignment expressions
@@ -95,20 +125,23 @@ def p_assignment_expression_1(p):
                               | ID EQUALS arithmatic_expression
                               '''
     print("assig. expr. 1")
+    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
     pass
 
-def p_assignment_expression_3(p):
+def p_assignment_expression_2(p):
     ''' assignment_expression : decleration EQUALS const_literal
                               | ID EQUALS const_literal
                               '''
     print("assig. expr. 2")
+    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
     pass
 
-def p_assignment_expression_5(p):
+def p_assignment_expression_3(p):
     ''' assignment_expression : ID EQUALS logical_expression
                               | decleration EQUALS logical_expression
                               '''
     print("assig. expr. 3")
+    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
     pass
 
 #logical expressions
@@ -122,6 +155,10 @@ def p_logical_expression(p):
                            | BCONST
                            '''
     print("logical expr.")
+    if len(p)==5:
+        p[0] = Node('logical_expression',[p[1],p[3]],p[2])
+    else :
+        p[0] = Node('logical_expression',None,p[1])
     pass
   
 # arithmatic expressions
@@ -132,11 +169,16 @@ def p_arithmatic_expression(p):
                              | ID 
                              '''
     print("Arth. Exp.")
+    if len(p)==4:
+        p[0] = Node('arithmatic_expression',[p[1],p[3]],p[2])
+    else:
+        p[0] = Node('arithmatic_expression',None,p[1])
     pass
 
 def p_decleration(p):
     ' decleration : ID data_type'
     print("decleration")
+    p[0] = Node('decleration',[p[2]],p[1])
     pass
 
 # Operators   
@@ -152,6 +194,7 @@ def p_logical_operator(p):
                          | NE
                          '''
     print("log. opr.")
+    p[0] = Node('logical_operator',None,p[1])
     pass
   
 def p_arithmatic_operator(p):
@@ -166,11 +209,13 @@ def p_arithmatic_operator(p):
                             | XOR
                             '''
     print("arith. opr.")
+    p[0] = Node('arithmatic_operator',None,p[1])
     pass
 
 def p_const_literal(p):
     ''' const_literal : SCONST
                       '''
+    p[0] = Node('const_literal',None,p[1])
     pass
   
 def p_data_type(p):
@@ -179,6 +224,7 @@ def p_data_type(p):
                   | BOOLEAN
                   '''
     print("data_type")
+    p[0] = Node('data_type',None,p[1])
     pass
     
 ################ Testing Parser ################ 
