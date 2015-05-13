@@ -6,7 +6,7 @@ import ply.lex as lex
 
 tokens = (
     # Reserved
-    'NUMBER', 'STRING', 'BOOLEAN','ELSE','TRUE','FALSE',
+    'NUMBER', 'STRING', 'BOOLEAN','ELSE',
     
 	# Literals (identifier, number, string, boolean)
     'ID', 'NCONST', 'SCONST', 'BCONST',
@@ -40,8 +40,6 @@ t_NUMBER           = r'\$NUMBER'
 t_STRING           = r'\$STRING'
 t_BOOLEAN          = r'\$BOOLEAN'
 t_ELSE             = r'\$NO'
-t_TRUE             = r'\$LIKE'
-t_FALSE            = r'\$DISLIKE' 
 
 # Operators
 t_PLUS             = r'\+'
@@ -96,7 +94,7 @@ t_NCONST = """(\d+(\.\d*)?|\.\d+)([eE][-+]? \d+)?"""
 t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
 
 # Boolean literal
-t_BCONST = r'like|dislike'
+t_BCONST = r'\$like|\$dislike'
     
 def t_COMMENT(t):
     r'//*'
