@@ -51,6 +51,7 @@ def p_iteration_statement_3(p):
     pass
 
 #conditional statements
+# FIXME NO { } not defined
 def p_if_statement(p):
     ''' if_statement : HASH logical_expression compound_statement
                      | HASH logical_expression compound_statement ELSE compound_statement
@@ -110,11 +111,13 @@ def p_assignment_expression_5(p):
     pass
 
 #logical expressions
-#TODO add x < 5 support
+#TODO rewrite
 def p_logical_expression(p):
     ''' logical_expression : ID logical_operator BCONST COND
-                           | ID logical_operator ID COND
+                           | ID logical_operator NCONST COND
                            | BCONST logical_operator ID COND
+                           | NCONST logical_operator ID COND
+                           | ID logical_operator ID COND
                            | BCONST
                            '''
     print("logical expr.")
@@ -179,8 +182,55 @@ def p_data_type(p):
     
 ################ Testing Parser ################ 
 #Build the grammar
+
+code = r'''
+in_var $NUMBER = 5
+fn_var $NUMBER = 3.14
+str_var $STRING = "I am a \"string\" \n"
+sout_var $STRING
+bool_var $BOOLEAN = $like
+
+
+# in_var < fn_var ? {
+	sout_var = "first less than second"
+}
+
+i $NUMBER = 0
+## i <= 5 ? {
+	sout_var = i
+	i = i+1
+}
+
+i = 0
+## {
+	sout_var = i
+	i = i+1
+} i<=5 ?
+
+## k $NUMBER=0, k<5?, k=k+1 {
+	sout_var = k
+}
+
+@i@{
+	1 ? 
+		sout_var = "i = 1"
+	$leave
+	
+	2?
+		sout_var = "i = 2"
+	$leave
+
+	$failed ?
+		sout_var = "not found"
+	$leave
+}
+'''
+
 yacc.yacc()
 
+yacc.parse(code)
+
+'''
 while 1:
     try:
         s = raw_input('p> ')
@@ -188,3 +238,4 @@ while 1:
         break
     if not s: continue
     yacc.parse(s)
+'''

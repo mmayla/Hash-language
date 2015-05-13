@@ -20,7 +20,7 @@ tokens = (
     # Other Operators (=,?,'@','#')
     'EQUALS', 'COND','AT','HASH',
     
-    # Delimeters ( ) [ ] { } , . ; :
+    # Delimeters ( ) [ ] { } , ; :
     'LPAREN', 'RPAREN',
     'LBRACKET', 'RBRACKET',
     'LBRACE', 'RBRACE',
