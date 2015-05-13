@@ -7,28 +7,24 @@ tokens = hashlex.tokens
 
 # assignment expressions
 def p_assignment_expression_1(p):
-    'assignment_expression : decleration EQUALS arithmatic_expression'
+    ''' assignment_expression : decleration EQUALS arithmatic_expression
+                              | ID EQUALS arithmatic_expression
+                              '''
     print("assig. expr. 1")
-    pass
-    
-def p_assignment_expression_2(p):
-    'assignment_expression : ID EQUALS arithmatic_expression'
-    print("assig. expr. 2")
     pass
 
 def p_assignment_expression_3(p):
-    'assignment_expression : decleration EQUALS const_literal'
-    print("assig. expr. 3")
+    ''' assignment_expression : decleration EQUALS const_literal
+                              | ID EQUALS const_literal
+                              '''
+    print("assig. expr. 2")
     pass
-    
-def p_assignment_expression_4(p):
-    'assignment_expression : ID EQUALS const_literal'
-    print("assig. expr. 4")
-    pass
-    
+
 def p_assignment_expression_5(p):
-    'assignment_expression : ID EQUALS logical_expression'
-    print("assig. expr. 5")
+    ''' assignment_expression : ID EQUALS logical_expression
+                              | decleration EQUALS logical_expression
+                              '''
+    print("assig. expr. 3")
     pass
 
 #logical expressions
