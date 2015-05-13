@@ -5,6 +5,31 @@ import ply.yacc as yacc
 # get tokens
 tokens = hashlex.tokens
 
+
+# statement
+def p_statements_list(p):
+    ''' statements_list : statement statements_list
+                        | compound_statement
+                        | statement
+                        '''
+    print("statements list")
+    pass
+
+def p_compound_statement(p):
+    ' compound_statement : LBRACE statements_list RBRACE '
+    print("compound statement")
+    pass
+
+def p_statement(p):
+    ''' statement : assignment_expression
+                  | decleration
+                  | switch_statement
+                  | if_statement
+                  | iteration_statement
+                  '''
+    print("statement")
+    pass
+
 # iteration statements
 # while statement
 def p_iteration_statement_1(p):
@@ -25,7 +50,7 @@ def p_iteration_statement_3(p):
     print("itr. stmnt. 3 - repeat-until")
     pass
 
-#conditional statement
+#conditional statements
 def p_if_statement(p):
     ''' if_statement : HASH logical_expression compound_statement
                      | HASH logical_expression compound_statement ELSE compound_statement
@@ -33,25 +58,33 @@ def p_if_statement(p):
     print("if statement")
     pass
 
-# statements
-def p_compound_statement(p):
-    ' compound_statement : LBRACE statements_list RBRACE '
-    print("compound statement")
+# switch statement
+def p_switch_statement(p):
+    ''' switch_statement : AT ID AT LBRACE switch_statement_body switch_statement_default RBRACE
+                         | AT ID AT LBRACE switch_statement_body RBRACE
+                         '''
+    print("switch statement")
     pass
 
-def p_statements_list(p):
-    ''' statements_list : statement statements_list
-                       | statement
-                       '''
-    print("statements list")
+def p_switch_statement_body(p):
+    ''' switch_statement_body : switch_statement_case switch_statement_body
+                              | switch_statement_case
+                              '''
+    print("switch stmnt body")
     pass
 
-def p_statement(p):
-    ''' statement : assignment_expression
-                  | decleration
-                  | if_statement
-                  '''
-    print("statement")
+def p_switch_statement_case(p):
+    ''' switch_statement_case : NCONST COND statements_list BREAK
+                              | NCONST COND statements_list
+                              '''
+    print("switch stmnt case")
+    pass
+
+def p_switch_statement_default(p):
+    ''' switch_statement_default : DEFAULT COND statements_list BREAK
+                                 | DEFAULT COND statements_list
+                                 '''
+    print("switch stmnt default")
     pass
 
 # assignment expressions

@@ -6,7 +6,7 @@ import ply.lex as lex
 
 tokens = (
     # Reserved
-    'NUMBER', 'STRING', 'BOOLEAN','ELSE',
+    'NUMBER', 'STRING', 'BOOLEAN','ELSE','BREAK','DEFAULT',
     
 	# Literals (identifier, number, string, boolean)
     'ID', 'NCONST', 'SCONST', 'BCONST',
@@ -40,6 +40,8 @@ t_NUMBER           = r'\$NUMBER'
 t_STRING           = r'\$STRING'
 t_BOOLEAN          = r'\$BOOLEAN'
 t_ELSE             = r'\$NO'
+t_BREAK            = r'\$leave'
+t_DEFAULT          = r'\$failed'
 
 # Operators
 t_PLUS             = r'\+'
