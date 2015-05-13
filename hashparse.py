@@ -5,7 +5,27 @@ import ply.yacc as yacc
 # get tokens
 tokens = hashlex.tokens
 
+# iteration statements
+# while statement
+def p_iteration_statement_1(p):
+    ' iteration_statement : HASH HASH logical_expression compound_statement '
+    print("itr. stmnt. 1 - while")
+    pass
 
+# for statement
+#TODO empty for arguments
+def p_iteration_statement_2(p):
+    ' iteration_statement : HASH HASH assignment_expression COMMA logical_expression COMMA assignment_expression compound_statement '
+    print("itr. stmnt. 2 - for")
+    pass
+
+# repeat until statement
+def p_iteration_statement_3(p):
+    ' iteration_statement : HASH HASH compound_statement logical_expression '
+    print("itr. stmnt. 3 - repeat-until")
+    pass
+
+#conditional statement
 def p_if_statement(p):
     ''' if_statement : HASH logical_expression compound_statement
                      | HASH logical_expression compound_statement ELSE compound_statement
@@ -29,6 +49,7 @@ def p_statements_list(p):
 def p_statement(p):
     ''' statement : assignment_expression
                   | decleration
+                  | if_statement
                   '''
     print("statement")
     pass
@@ -56,6 +77,7 @@ def p_assignment_expression_5(p):
     pass
 
 #logical expressions
+#TODO add x < 5 support
 def p_logical_expression(p):
     ''' logical_expression : ID logical_operator BCONST COND
                            | ID logical_operator ID COND
@@ -102,6 +124,9 @@ def p_arithmatic_operator(p):
                             | DIVIDE
                             | MOD
                             | POWER
+                            | AND
+                            | OR
+                            | XOR
                             '''
     print("arith. opr.")
     pass
