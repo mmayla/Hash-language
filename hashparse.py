@@ -27,7 +27,7 @@ def p_statements_list(p):
 def p_compound_statement(p):
     ' compound_statement : LBRACE statements_list RBRACE '
     print("compound statement")
-    p[0] = Node('compound_statement',None,p[2])
+    p[0] = "cp"
     pass
 
 def p_statement(p):
@@ -38,13 +38,13 @@ def p_statement(p):
                   | iteration_statement
                   '''
     print("statement")
-    p[0] = Node('iteration_statement',None,p[1])
+    p[0] = Node('statement',None,p[1])
     pass
 
 # iteration statements
 # while statement
 def p_iteration_statement_1(p):
-    ' iteration_statement : HASH HASH logical_expression compound_statement '
+    ' iteration_statement : iteration_pre logical_expression compound_statement '
     print("itr. stmnt. 1 - while")
     p[0] = "while"
     idx = codegenerator.lastIndexOfInst("CMP")
@@ -58,16 +58,25 @@ def p_iteration_statement_1(p):
 # for statement
 #TODO empty for arguments
 def p_iteration_statement_2(p):
-    ' iteration_statement : HASH HASH assignment_expression COMMA logical_expression COMMA assignment_expression compound_statement '
+    ' iteration_statement : iteration_pre assignment_expression COMMA logical_expression COMMA assignment_expression compound_statement '
     print("itr. stmnt. 2 - for")
-    p[0] = Node('iteration_statement',[p[3],p[7],p[8]],p[5])
+    p[0] = "for"
+    
     pass
 
 # repeat until statement
 def p_iteration_statement_3(p):
-    ' iteration_statement : HASH HASH compound_statement logical_expression '
+    ' iteration_statement : iteration_pre compound_statement logical_expression '
     print("itr. stmnt. 3 - repeat-until")
-    p[0] = Node('iteration_statement',[p[4]],p[3])
+    p[0] = "ru"
+    idx = codegenerator.lastIndexOfInst("#") #TODO if -1 error
+    codegenerator.assembly.pop(idx) #remove #
+    codegenerator.assembly.insert(idx,codegenerator.getLabel()+":")
+    pass
+
+def p_iteration_pre(p):
+    ' iteration_pre : HASH HASH'
+    codegenerator.addAssembly("#")
     pass
 
 #conditional statements
@@ -260,17 +269,8 @@ def p_data_type(p):
 
 code = r'''
 sout_var $STRING
-
-i $NUMBER = 0
-## i <= 5 ? {
-	sout_var = i
-	i = i+1
-}
-
-i $NUMBER = 0
-## i <= 5 ? {
-	sout_var = i
-	i = i+1
+## k $NUMBER=0, k<5?, k=k+1 {
+	sout_var = k
 }
 '''
 
