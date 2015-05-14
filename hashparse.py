@@ -216,16 +216,16 @@ def p_logical_expression(p):
 # FIXME 5=5, 6<5 -> LHS=ID
 def p_arithmatic_expression(p):
     '''arithmatic_expression : ID arithmatic_operator arithmatic_expression
-                             | NCONST arithmatic_operator arithmatic_expression
-                             | NCONST
+                             | const_number arithmatic_operator arithmatic_expression
+                             | const_number
                              | ID 
                              '''
     print("Arth. Exp.")
     if len(p)==4:
-        #TODO complete
-        p[0] = p[1]
+        codegenerator.addAssembly(p[2]+" "+p[1]+","+p[3])
+        p[0]=p[1]
     else:
-        if p[1]=="ID":
+        if p[1][0]!="R":
             p[0] = p[1]
         else:
             codegenerator.registers.append(str(p[1]))
@@ -299,8 +299,6 @@ def p_arithmatic_operator(p):
         p[0] = "XOR"
     elif p[1]=="^":
         p[0] = "POW"
-        
-    p[0] = p[1]
     pass
 
 def p_left_brace(p):
@@ -311,6 +309,13 @@ def p_left_brace(p):
 def p_right_brace(p):
     ' right_brace : RBRACE '
     codegenerator.addAssembly("}")
+    pass
+
+def p_const_number(p):
+    ' const_number : NCONST '
+    codegenerator.registers.append(str(p[1]))
+    p[0] = "R"+str(len(codegenerator.registers)-1)
+    codegenerator.addAssembly("MOV "+p[0]+","+str(p[1]))
     pass
 
 def p_const_literal(p):
@@ -334,10 +339,8 @@ def p_data_type(p):
 
 
 code = r'''
-sout_var $STRING
-## k $NUMBER=0, k<5?, k=k+1 {
-	sout_var = k
-}
+x $NUMBER
+x = y + 5
 '''
 
 yacc.yacc()
