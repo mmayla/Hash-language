@@ -27,6 +27,12 @@ class Generator:
                 return True
         return False
     
+    def getVarType(self,var):
+        for i in range (0,len(self.variables)):
+            if self.variables[i].name == var:
+                return self.variables[i].datatype
+        return None
+    
     def addAssembly(self,line):
         self.assembly.append(line)
     

@@ -1,7 +1,9 @@
-x $NUMBER = 5
-y $NUMBER = 3.14
-
+x $NUMBER = 15
+y $BOOLEAN = $like
+z $STRING = "shaba7"
+z=$like
+x="shaba7"
+y=5
 x = 3
-z = 10
 
 y $NUMBER

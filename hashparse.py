@@ -190,28 +190,78 @@ def p_switch_statement_default(p):
     pass
 
 # assignment expressions
+# TODO here
 def p_assignment_expression_1(p):
-    ''' assignment_expression : decleration EQUALS arithmatic_expression
-                              | decleration EQUALS const_literal
-                              | decleration EQUALS logical_expression
-                              '''
+    ''' assignment_expression : decleration EQUALS arithmatic_expression '''
     print("assig. expr. 1")
     p[0] = p[1]
     codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
     
+    vartype = codegenerator.getVarType(str(p[1]))
+    if vartype != '$NUMBER':
+          codegenerator.errors.append("Can not convert "+str(vartype)+" to $NUMBER at line "+str(p.lineno(2)))
     pass
 
 def p_assignment_expression_2(p):
-    ''' assignment_expression : ID EQUALS const_literal
-                              | ID EQUALS arithmatic_expression
-                              | ID EQUALS logical_expression
-                              '''
+    ''' assignment_expression : decleration EQUALS const_literal '''
     print("assig. expr. 2")
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    vartype = codegenerator.getVarType(str(p[1]))
+    if vartype != '$STRING':
+          codegenerator.errors.append("Can not convert "+str(vartype)+" to $STRING at line "+str(p.lineno(2)))
+    pass
+
+def p_assignment_expression_3(p):
+    ''' assignment_expression : decleration EQUALS logical_expression '''
+    print("assig. expr. 3")
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    vartype = codegenerator.getVarType(str(p[1]))
+    if vartype != '$BOOLEAN':
+          codegenerator.errors.append("Can not convert "+str(vartype)+" to $BOOLEAN at line "+str(p.lineno(2)))
+    pass
+
+def p_assignment_expression_4(p):
+    ''' assignment_expression : ID EQUALS const_literal'''
+    print("assig. expr. 4")
     p[0] = p[1]
     codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
     
     if not codegenerator.isDeclared(str(p[1])):
         codegenerator.errors.append("The variable "+str(p[1])+" is not declared at line "+str(p.lineno(1)))
+    else:
+            vartype = codegenerator.getVarType(str(p[1]))
+            if vartype != '$STRING':
+                codegenerator.errors.append("Can not convert "+str(vartype)+" to $STRING at line "+str(p.lineno(2)))
+    pass
+
+def p_assignment_expression_5(p):
+    ''' assignment_expression : ID EQUALS arithmatic_expression'''
+    print("assig. expr. 5")
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    
+    if not codegenerator.isDeclared(str(p[1])):
+        codegenerator.errors.append("The variable "+str(p[1])+" is not declared at line "+str(p.lineno(1)))
+    else:
+            vartype = codegenerator.getVarType(str(p[1]))
+            if vartype != '$NUMBER':
+                codegenerator.errors.append("Can not convert "+str(vartype)+" to $NUMBER at line "+str(p.lineno(2)))
+    pass
+
+def p_assignment_expression_6(p):
+    ''' assignment_expression : ID EQUALS logical_expression'''
+    print("assig. expr. 6")
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    
+    if not codegenerator.isDeclared(str(p[1])):
+        codegenerator.errors.append("The variable "+str(p[1])+" is not declared at line "+str(p.lineno(1)))
+    else:
+            vartype = codegenerator.getVarType(str(p[1]))
+            if vartype != '$BOOLEAN':
+                codegenerator.errors.append("Can not convert "+str(vartype)+" to $BOOLEAN at line "+str(p.lineno(2)))
     pass
 
 #logical expressions
