@@ -1,16 +1,6 @@
-i $NUMBER
-MOV R0,0
-MOV R1,R0
-ST i,R1
-loop-label1:
-CMP i,5
-JLE label1
+CMP in_var,fn_var
+JLT label1
 JMP outlabel1
 label1:
-ST sout_var,i
-MOV R2,1
-MOV R3,R2
-ADD i,R3
-ST i,i
-JMP loop-label1
+ST sout_var,"first less than second"
 outlabel1:

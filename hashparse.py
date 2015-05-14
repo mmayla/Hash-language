@@ -106,9 +106,21 @@ def p_if_statement(p):
     # FIXME fix and revise
     if len(p)==6:
         p[0] = "if"
+        idx = codegenerator.lastIndexOfInst("CMP")
+        codegenerator.assembly.insert(idx+2,"JMP f"+codegenerator.getLabel())
+        codegenerator.assembly.insert(idx+3,codegenerator.getLabel()+":")
+        idx = codegenerator.lastIndexOfInst("{")
+        codegenerator.assembly.insert(idx,"JMP out"+codegenerator.getLabel())
+        codegenerator.assembly.insert(idx+1,"f"+codegenerator.getLabel()+":")
+        idx = codegenerator.lastIndexOfInst("}")
+        codegenerator.assembly.insert(idx,"out"+codegenerator.getLabel()+":")
     else:
         p[0] = "if"
-        
+        idx = codegenerator.lastIndexOfInst("CMP")
+        codegenerator.assembly.insert(idx+2,"JMP out"+codegenerator.getLabel())
+        codegenerator.assembly.insert(idx+3,codegenerator.getLabel()+":")
+        idx = codegenerator.lastIndexOfInst("}")
+        codegenerator.assembly.insert(idx,"out"+codegenerator.getLabel()+":")
     pass
 
 # switch statement
