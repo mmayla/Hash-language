@@ -4,6 +4,14 @@ z $STRING = "shaba7"
 z=$like
 x="shaba7"
 y=5
-x = 3
+x = 3+y
+
+y=$like5
 
 y $NUMBER
+
+x $BOOLEAN
+
+# x > z ? {
+	z = "test"
+}

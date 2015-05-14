@@ -266,19 +266,23 @@ def p_assignment_expression_6(p):
 
 #logical expressions
 #TODO rewrite
-def p_logical_expression(p):
-    ''' logical_expression : ID logical_operator BCONST COND
-                           | ID logical_operator NCONST COND
-                           | BCONST logical_operator ID COND
+def p_logical_expression_1(p):
+    ''' logical_expression : BCONST logical_operator ID COND
                            | NCONST logical_operator ID COND
-                           | ID logical_operator ID COND
                            | BCONST
                            '''
-    print("logical expr.")
+    print("logical expr.1")
     if len(p)==5:
         p[0] = "***"
         codegenerator.addAssembly("CMP "+p[1]+","+p[3])
         codegenerator.addAssembly(p[2]+" "+codegenerator.getNewLabel())
+        vartype = codegenerator.getVarType(str(p[3]))
+        if p[1]=='$like' or p[1]=='$dislike':
+            if vartype != '$BOOLEAN':
+                codegenerator.errors.append("Can not perform this operation on "+str(vartype)+" with $BOOLEAN at line "+str(p.lineno(1)))
+        else:
+            if vartype != '$NUMBER':
+                codegenerator.errors.append("Can not perform this operation on "+str(vartype)+" with $NUMBER at line "+str(p.lineno(1)))
     else :
         if p[1]=='$like':
             p[1]="1"
@@ -286,16 +290,57 @@ def p_logical_expression(p):
             p[1]="0"
         p[0] = p[1]
     pass
-  
+
+def p_logical_expression_2(p):
+    ''' logical_expression : ID logical_operator BCONST COND
+                           | ID logical_operator NCONST COND
+                           '''
+    print("logical expr. 2")
+    if len(p)==5:
+        p[0] = "***"
+        codegenerator.addAssembly("CMP "+p[1]+","+p[3])
+        codegenerator.addAssembly(p[2]+" "+codegenerator.getNewLabel())
+        vartype = codegenerator.getVarType(str(p[1]))
+        if p[3]=='$like' or p[3]=='$dislike':
+            if vartype != '$BOOLEAN':
+                codegenerator.errors.append("Can not perform this operation on "+str(vartype)+" with $BOOLEAN at line "+str(p.lineno(1)))
+        else:
+            if vartype != '$NUMBER':
+                codegenerator.errors.append("Can not perform this operation on "+str(vartype)+" with $NUMBER at line "+str(p.lineno(1)))
+    else :
+        if p[1]=='$like':
+            p[1]="1"
+        else:
+            p[1]="0"
+        p[0] = p[1]
+    pass  
+
+def p_logical_expression_3(p):
+    ''' logical_expression : ID logical_operator ID COND '''
+    print("logical expr. 3")
+    if len(p)==5:
+        p[0] = "***"
+        codegenerator.addAssembly("CMP "+p[1]+","+p[3])
+        codegenerator.addAssembly(p[2]+" "+codegenerator.getNewLabel())
+        vartype1 = codegenerator.getVarType(str(p[1]))
+        vartype2 = codegenerator.getVarType(str(p[3]))
+        if vartype1 != vartype2:
+                codegenerator.errors.append("Can not perform this operation on "+str(vartype1)+" with "+str(vartype2)+" at line "+str(p.lineno(1)))
+    else :
+        if p[1]=='$like':
+            p[1]="1"
+        else:
+            p[1]="0"
+        p[0] = p[1]
+    pass  
+
 # arithmatic expressions
 # FIXME 5=5, 6<5 -> LHS=ID
-def p_arithmatic_expression(p):
-    '''arithmatic_expression : ID arithmatic_operator arithmatic_expression
-                             | const_number arithmatic_operator arithmatic_expression
+def p_arithmatic_expression_1(p):
+    '''arithmatic_expression : const_number arithmatic_operator arithmatic_expression
                              | const_number
-                             | ID
                              '''
-    print("Arth. Exp.")
+    print("Arth. Exp.1")
     if len(p)==4:
         codegenerator.addAssembly(p[2]+" "+p[1]+","+p[3])
         p[0]=p[1]
@@ -307,7 +352,28 @@ def p_arithmatic_expression(p):
             p[0] = "R"+str(len(codegenerator.registers)-1)
             codegenerator.addAssembly("MOV "+p[0]+","+str(p[1]))
     pass
-
+def p_arithmatic_expression_2(p):
+    '''arithmatic_expression : ID arithmatic_operator arithmatic_expression
+                             | ID
+                             '''
+    print("Arth. Exp.2")
+    if len(p)==4:
+        codegenerator.addAssembly(p[2]+" "+p[1]+","+p[3])
+        p[0]=p[1]
+        vartype = codegenerator.getVarType(str(p[1]))
+        if vartype != '$NUMBER':
+            codegenerator.errors.append("Can perform this operation on "+str(vartype)+" at line "+str(p.lineno(1)))
+    else:
+        vartype = codegenerator.getVarType(str(p[1]))
+        if vartype != '$NUMBER':
+            codegenerator.errors.append("Can perform this operation on "+str(vartype)+" at line "+str(p.lineno(1)))
+        if p[1][0]!="R":
+            p[0] = p[1]
+        else:
+            codegenerator.registers.append(str(p[1]))
+            p[0] = "R"+str(len(codegenerator.registers)-1)
+            codegenerator.addAssembly("MOV "+p[0]+","+str(p[1]))
+    pass
 def p_decleration(p):
     ' decleration : ID data_type'
     print("decleration")

@@ -12,6 +12,14 @@ MOV R2,5
 MOV R3,R2
 ST y,R3
 MOV R4,3
-MOV R5,R4
-ST x,R5
+ADD R4,y
+ST x,R4
+ST y,1
 y $NUMBER
+x $BOOLEAN
+CMP x,z
+JGT label1
+JMP outlabel1
+label1:
+ST z,"test"
+outlabel1:
