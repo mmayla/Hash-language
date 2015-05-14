@@ -1,0 +1,5 @@
+i $NUMBER = 0
+## i <= 5 ?{
+	sout_var = i
+	i = i+1
+}

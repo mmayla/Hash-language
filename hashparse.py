@@ -1,6 +1,5 @@
 import sys
 import hashlex
-from ast import Node
 import generator
 import ply.yacc as yacc
 
@@ -18,10 +17,6 @@ def p_statements_list(p):
                         | statement
                         '''
     print("statements list")
-    if len(p)==3:
-        p[0] = Node('statements_list',[p[2]],p[1])
-    else:
-        p[0] = Node('statements_list',None,p[1])
     pass
 
 def p_compound_statement(p):
@@ -38,7 +33,6 @@ def p_statement(p):
                   | iteration_statement
                   '''
     print("statement")
-    p[0] = Node('statement',None,p[1])
     pass
 
 # iteration statements
@@ -109,8 +103,9 @@ def p_if_statement(p):
                      | HASH logical_expression compound_statement ELSE compound_statement
                      '''
     print("if statement")
+    # FIXME fix and revise
     if len(p)==6:
-        p[0] = Node('if_statement',[p[3],p[5]],p[2])
+        p[0] = "if"
     else:
         p[0] = "if"
         
@@ -123,9 +118,9 @@ def p_switch_statement(p):
                          '''
     print("switch statement")
     if len(p)==8:
-        p[0] = Node('switch_statement',[p[5],p[6]],p[2])
+        p[0] = "switch"
     else:
-        p[0] = Node('switch_statement',[p[5]],p[2])    
+        p[0] = "switch"
     pass
 
 def p_switch_statement_body(p):
@@ -134,9 +129,9 @@ def p_switch_statement_body(p):
                               '''
     print("switch stmnt body")
     if len(p)==3:
-        p[0] = Node('switch_statement_body',[p[2]],p[1])
+        p[0] = "switch body"
     else:
-        p[0] = Node('switch_statement_body',None,p[1])
+        p[0] = "switch body"
     pass
 
 def p_switch_statement_case(p):
@@ -145,9 +140,9 @@ def p_switch_statement_case(p):
                               '''
     print("switch stmnt case")
     if len(p)==5:
-        p[0] = Node('switch_statement_default',[p[3],p[4]],p[1])
+        p[0] = "switch case"
     else:
-        p[0] = Node('switch_statement_default',[p[3]],p[1])
+        p[0] = "switch case"
     pass
 
 def p_switch_statement_default(p):
@@ -156,9 +151,9 @@ def p_switch_statement_default(p):
                                  '''
     print("switch stmnt default")
     if len(p)==5:
-        p[0] = Node('switch_statement_default',[p[3],p[4]],p[1])
+        p[0] = "switch default"
     else:
-        p[0] = Node('switch_statement_default',[p[3]],p[1])
+        p[0] = "switch default"
     pass
 
 # assignment expressions
@@ -333,21 +328,31 @@ def p_data_type(p):
     print("data_type")
     p[0] = p[1]
     pass
-    
+
+
+def p_error(p):
+    msg = "Syntax error at line: "+str(p.lineno)+" , Token: "+p.type
+    print(msg)
+    codegenerator.writeErrorFile("./workspace/error.out",p.lineno,msg)
+    codegenerator.error = True
+    pass
+
 ################ Testing Parser ################ 
 #Build the grammar
 
-
-code = r'''
-x $NUMBER
-x = y + 5
-'''
+#input file
+code = codegenerator.readFile("./workspace/input.hash")
 
 yacc.yacc()
 
 yacc.parse(code)
 
 codegenerator.printAssembly()
+
+codegenerator.writeAssemblyToFile("./workspace/output.hash")
+
+if codegenerator.error==False :
+    codegenerator.writeErrorFile("./workspace/error.out",0,"Succeed")
 
 '''
 while 1:

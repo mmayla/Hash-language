@@ -3,6 +3,7 @@ class Generator:
         self.registers = []
         self.assembly = []
         self.labelno = 0
+        self.error = False
     
     def addAssembly(self,line):
         self.assembly.append(line)
@@ -27,3 +28,25 @@ class Generator:
     
     def getLabel(self):
         return "label"+str(self.labelno)
+    
+    def readFile(self,path):
+        with open(path) as f:
+            content = f.readlines()
+            s = ""
+            for i in range (0,len(content)):
+                s = s + content[i]
+            return s
+    
+    def writeAssemblyToFile(self,path):
+        target = open(path,'w')
+        for i in range(0,len(self.assembly)):
+            if (self.assembly[i]!='{') and (self.assembly[i]!='}') and (self.assembly[i]!='#'):
+                target.write(self.assembly[i])
+                target.write("\n")
+            
+    def writeErrorFile(self,path,errorlineno,errormsg):
+        error = open(path,'w')
+        error.write(str(errorlineno))
+        error.write("\n")
+        error.write(str(errormsg))
+        error.write("\n")
