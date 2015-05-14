@@ -9,7 +9,6 @@ class Generator:
         self.registers = []
         self.assembly = []
         self.labelno = 0
-        self.error = False
         self.tempvar = ""
         self.variables = []
         self.errors = []
@@ -70,6 +69,12 @@ class Generator:
         for i in range(0,len(self.assembly)):
             if (self.assembly[i]!='{') and (self.assembly[i]!='}') and (self.assembly[i]!='#'):
                 target.write(self.assembly[i])
+                target.write("\n")
+    
+    def writeErrorsToFile(self,path):
+        target = open(path,'w')
+        for i in range(0,len(self.errors)):
+                target.write(self.errors[i])
                 target.write("\n")
             
     def writeErrorFile(self,path,errorlineno,errormsg):

@@ -35,8 +35,4 @@ i = 0
 	2?
 		sout_var = "i = 2"
 	$leave
-
-	$failed ?
-		sout_var = "not found"
-	$leave
 }

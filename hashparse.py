@@ -482,10 +482,10 @@ def p_data_type(p):
 
 
 def p_error(p):
-    msg = "Syntax error at line: "+str(p.lineno)+" , Token: "+p.type
+    msg = "Syntax error: Token ("+p.type+") at line: "+str(p.lineno)
     print(msg)
-    codegenerator.writeErrorFile("./workspace/error.out",p.lineno,msg)
-    codegenerator.error = True
+    #codegenerator.writeErrorFile("./workspace/error.out",p.lineno,msg)
+    codegenerator.errors.append(msg)
     pass
 
 ################ Testing Parser ################ 
@@ -503,8 +503,11 @@ codegenerator.printErrors()
 
 codegenerator.writeAssemblyToFile("./workspace/output.hash")
 
-if codegenerator.error==False :
+if len(codegenerator.errors)==0 :
     codegenerator.writeErrorFile("./workspace/error.out",0,"Succeed")
+else:
+    codegenerator.writeErrorsToFile("./workspace/error.out")
+    
 
 '''
 while 1:
