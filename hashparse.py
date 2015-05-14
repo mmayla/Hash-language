@@ -81,6 +81,9 @@ def p_iteration_statement_2(p):
     
     sidx = codegenerator.lastIndexOfInst("CMP")
     codegenerator.assembly.insert(sidx,"loop-"+codegenerator.getLabel()+":")
+    
+    sidx = codegenerator.lastIndexOfInst("#")
+    codegenerator.assembly.pop(sidx)
     pass
 
 # repeat until statement
@@ -278,6 +281,25 @@ def p_arithmatic_operator(p):
                             | XOR
                             '''
     print("arith. opr.")
+    if p[1]=="+":
+        p[0] = "ADD"
+    elif p[1]=="-":
+        p[0] = "SUB"
+    elif p[1]=="*":
+        p[0] = "MUL"
+    elif p[1]=="/":
+        p[0] = "DIV"
+    elif p[1]=="%":
+        p[0] = "MOD"
+    elif p[1]=="&":
+        p[0] = "AND"
+    elif p[1]=="|":
+        p[0] = "OR"
+    elif p[1]=="**":
+        p[0] = "XOR"
+    elif p[1]=="^":
+        p[0] = "POW"
+        
     p[0] = p[1]
     pass
 
