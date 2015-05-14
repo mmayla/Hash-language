@@ -3,3 +3,5 @@ y $NUMBER = 3.14
 
 x = 3
 z = 10
+
+y $NUMBER

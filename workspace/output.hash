@@ -12,3 +12,4 @@ ST x,R5
 MOV R6,10
 MOV R7,R6
 ST z,R7
+y $NUMBER

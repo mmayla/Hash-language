@@ -263,7 +263,11 @@ def p_decleration(p):
     print("decleration")
     p[0] = p[1]
     codegenerator.addAssembly(str(p[1])+" "+p[2])
-    codegenerator.addVariable(generator.Variable(str(p[1]),str(p[2])))
+    
+    if codegenerator.isDeclared(str(p[1])):
+        codegenerator.errors.append("The variable name "+str(p[1])+" is declared before, rename the variable at line "+str(p.lineno(1)))
+    else :
+        codegenerator.addVariable(generator.Variable(str(p[1]),str(p[2])))
     pass
 
 # Operators   
