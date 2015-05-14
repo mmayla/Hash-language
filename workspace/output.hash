@@ -1,13 +1,14 @@
-CMP i,1
-JE label1_1
-JMP label_end
-label1_1:
-ST sout_var,"i = 1"
-JMP label_end
-CMP i,2
-JE label2_2
-JMP label_end
-label2_2:
-ST sout_var,"i = 2"
-JMP label_end
-label_end:
+x $NUMBER
+MOV R0,5
+MOV R1,R0
+ST x,R1
+y $NUMBER
+MOV R2,3.14
+MOV R3,R2
+ST y,R3
+MOV R4,3
+MOV R5,R4
+ST x,R5
+MOV R6,10
+MOV R7,R6
+ST z,R7

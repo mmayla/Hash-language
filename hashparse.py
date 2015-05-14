@@ -192,29 +192,26 @@ def p_switch_statement_default(p):
 # assignment expressions
 def p_assignment_expression_1(p):
     ''' assignment_expression : decleration EQUALS arithmatic_expression
-                              | ID EQUALS arithmatic_expression
+                              | decleration EQUALS const_literal
+                              | decleration EQUALS logical_expression
                               '''
     print("assig. expr. 1")
     p[0] = p[1]
     codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    
     pass
 
 def p_assignment_expression_2(p):
-    ''' assignment_expression : decleration EQUALS const_literal
-                              | ID EQUALS const_literal
+    ''' assignment_expression : ID EQUALS const_literal
+                              | ID EQUALS arithmatic_expression
+                              | ID EQUALS logical_expression
                               '''
     print("assig. expr. 2")
     p[0] = p[1]
     codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
-    pass
-
-def p_assignment_expression_3(p):
-    ''' assignment_expression : ID EQUALS logical_expression
-                              | decleration EQUALS logical_expression
-                              '''
-    print("assig. expr. 3")
-    p[0] = p[1]
-    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
+    
+    if not codegenerator.isDeclared(str(p[1])):
+        codegenerator.errors.append("The variable "+str(p[1])+" is not declared at line "+str(p.lineno(1)))
     pass
 
 #logical expressions
@@ -266,6 +263,7 @@ def p_decleration(p):
     print("decleration")
     p[0] = p[1]
     codegenerator.addAssembly(str(p[1])+" "+p[2])
+    codegenerator.addVariable(generator.Variable(str(p[1]),str(p[2])))
     pass
 
 # Operators   
@@ -381,6 +379,7 @@ yacc.yacc()
 yacc.parse(code)
 
 codegenerator.printAssembly()
+codegenerator.printErrors()
 
 codegenerator.writeAssemblyToFile("./workspace/output.hash")
 

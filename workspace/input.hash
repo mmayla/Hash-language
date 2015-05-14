@@ -1,9 +1,5 @@
-@i@{
-	1 ? 
-		sout_var = "i = 1"
-	$leave
-	
-	2?
-		sout_var = "i = 2"
-	$leave
-}
+x $NUMBER = 5
+y $NUMBER = 3.14
+
+x = 3
+z = 10

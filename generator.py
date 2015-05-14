@@ -1,3 +1,9 @@
+class Variable:
+    def __init__(self,name,dtype):
+        self.name = name
+        self.datatype = dtype
+        
+
 class Generator:
     def __init__(self):
         self.registers = []
@@ -5,6 +11,21 @@ class Generator:
         self.labelno = 0
         self.error = False
         self.tempvar = ""
+        self.variables = []
+        self.errors = []
+    
+    def printErrors(self):
+        for i in range(0,len(self.errors)):
+            print("> "+self.errors[i])
+    
+    def addVariable(self,var):
+        self.variables.append(var)
+        
+    def isDeclared(self,var):
+        for i in range (0,len(self.variables)):
+            if self.variables[i].name == var:
+                return True
+        return False
     
     def addAssembly(self,line):
         self.assembly.append(line)
