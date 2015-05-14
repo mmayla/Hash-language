@@ -25,7 +25,7 @@ def p_statements_list(p):
     pass
 
 def p_compound_statement(p):
-    ' compound_statement : LBRACE statements_list RBRACE '
+    ' compound_statement : left_brace statements_list right_brace '
     print("compound statement")
     p[0] = "cp"
     pass
@@ -61,7 +61,26 @@ def p_iteration_statement_2(p):
     ' iteration_statement : iteration_pre assignment_expression COMMA logical_expression COMMA assignment_expression compound_statement '
     print("itr. stmnt. 2 - for")
     p[0] = "for"
+    sidx = codegenerator.lastIndexOfInst("CMP")
+    eidx = codegenerator.lastIndexOfInst("{")
+    lines = []
+    for i in range (0,eidx-sidx-2):
+        lines.append(codegenerator.assembly.pop(sidx+2))
+        
+    eidx = codegenerator.lastIndexOfInst("}")
+    codegenerator.assembly.pop(eidx)
+    for i in range (0,len(lines)):
+        codegenerator.assembly.insert(i+eidx,lines[i])
     
+    sid = codegenerator.lastIndexOfInst("{")
+    codegenerator.assembly.pop(sid)
+    codegenerator.assembly.insert(sid,"JMP out"+codegenerator.getLabel())
+    
+    codegenerator.addAssembly("JMP loop-"+codegenerator.getLabel())
+    codegenerator.addAssembly("out"+codegenerator.getLabel()+":")
+    
+    sidx = codegenerator.lastIndexOfInst("CMP")
+    codegenerator.assembly.insert(sidx,"loop-"+codegenerator.getLabel()+":")
     pass
 
 # repeat until statement
@@ -74,12 +93,14 @@ def p_iteration_statement_3(p):
     codegenerator.assembly.insert(idx,codegenerator.getLabel()+":")
     pass
 
+
 def p_iteration_pre(p):
     ' iteration_pre : HASH HASH'
     codegenerator.addAssembly("#")
     pass
 
 #conditional statements
+
 def p_if_statement(p):
     ''' if_statement : HASH logical_expression compound_statement
                      | HASH logical_expression compound_statement ELSE compound_statement
@@ -94,8 +115,8 @@ def p_if_statement(p):
 
 # switch statement
 def p_switch_statement(p):
-    ''' switch_statement : AT ID AT LBRACE switch_statement_body switch_statement_default RBRACE
-                         | AT ID AT LBRACE switch_statement_body RBRACE
+    ''' switch_statement : AT ID AT left_brace switch_statement_body switch_statement_default right_brace
+                         | AT ID AT left_brace switch_statement_body right_brace
                          '''
     print("switch statement")
     if len(p)==8:
@@ -245,6 +266,16 @@ def p_arithmatic_operator(p):
                             '''
     print("arith. opr.")
     p[0] = p[1]
+    pass
+
+def p_left_brace(p):
+    ' left_brace : LBRACE '
+    codegenerator.addAssembly("{")
+    pass
+
+def p_right_brace(p):
+    ' right_brace : RBRACE '
+    codegenerator.addAssembly("}")
     pass
 
 def p_const_literal(p):
