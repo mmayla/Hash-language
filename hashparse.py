@@ -26,7 +26,7 @@ def p_statements_list(p):
 
 def p_compound_statement(p):
     ' compound_statement : LBRACE statements_list RBRACE '
-    #print("compound statement")
+    print("compound statement")
     p[0] = Node('compound_statement',None,p[2])
     pass
 
@@ -46,7 +46,13 @@ def p_statement(p):
 def p_iteration_statement_1(p):
     ' iteration_statement : HASH HASH logical_expression compound_statement '
     print("itr. stmnt. 1 - while")
-    p[0] = Node('iteration_statement',[p[4]],p[3])
+    p[0] = "while"
+    idx = codegenerator.lastIndexOfInst("CMP")
+    codegenerator.assembly.insert(idx,"loop-"+codegenerator.getLabel()+":")
+    codegenerator.assembly.insert(idx+3,"JMP out"+codegenerator.getLabel())
+    codegenerator.assembly.insert(idx+4,codegenerator.getLabel()+":")
+    codegenerator.addAssembly("JMP loop-"+codegenerator.getLabel())
+    codegenerator.addAssembly("out"+codegenerator.getLabel()+":")
     pass
 
 # for statement
@@ -71,9 +77,10 @@ def p_if_statement(p):
                      '''
     print("if statement")
     if len(p)==6:
-        p[0] = Node('switch_statement',[p[3],p[5]],p[2])
+        p[0] = Node('if_statement',[p[3],p[5]],p[2])
     else:
-        p[0] = Node('switch_statement',[p[3]],p[2])  
+        p[0] = "if"
+        
     pass
 
 # switch statement
@@ -137,7 +144,7 @@ def p_assignment_expression_2(p):
                               '''
     print("assig. expr. 2")
     p[0] = p[1]
-    
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
     pass
 
 def p_assignment_expression_3(p):
@@ -145,7 +152,8 @@ def p_assignment_expression_3(p):
                               | decleration EQUALS logical_expression
                               '''
     print("assig. expr. 3")
-    p[0] = Node('assignment_expression',[p[1],p[3]],p[2])
+    p[0] = p[1]
+    codegenerator.addAssembly("ST "+str(p[1])+","+str(p[3]))
     pass
 
 #logical expressions
@@ -160,8 +168,14 @@ def p_logical_expression(p):
                            '''
     print("logical expr.")
     if len(p)==5:
-        p[0] = Node('logical_expression',[p[1],p[3]],p[2])
+        p[0] = "***"
+        codegenerator.addAssembly("CMP "+p[1]+","+p[3])
+        codegenerator.addAssembly("JE "+codegenerator.getNewLabel()) #FIXME JMP to real
     else :
+        if p[1]=='$like':
+            p[1]="1"
+        else:
+            p[1]="0"
         p[0] = p[1]
     pass
   
@@ -175,6 +189,7 @@ def p_arithmatic_expression(p):
                              '''
     print("Arth. Exp.")
     if len(p)==4:
+        #TODO complete
         p[0] = p[1]
     else:
         if p[1]=="ID":
@@ -242,12 +257,21 @@ def p_data_type(p):
 ################ Testing Parser ################ 
 #Build the grammar
 
+
 code = r'''
-in_var $NUMBER = 5
-fn_var $NUMBER = 3.14
-str_var $STRING = "I am a \"string\" \n"
 sout_var $STRING
-bool_var $BOOLEAN = $like
+
+i $NUMBER = 0
+## i <= 5 ? {
+	sout_var = i
+	i = i+1
+}
+
+i $NUMBER = 0
+## i <= 5 ? {
+	sout_var = i
+	i = i+1
+}
 '''
 
 yacc.yacc()
