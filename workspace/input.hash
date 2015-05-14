@@ -1,3 +1,9 @@
-# in_var < fn_var ? {
-	sout_var = "first less than second"
+@i@{
+	1 ? 
+		sout_var = "i = 1"
+	$leave
+	
+	2?
+		sout_var = "i = 2"
+	$leave
 }

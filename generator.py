@@ -4,6 +4,7 @@ class Generator:
         self.assembly = []
         self.labelno = 0
         self.error = False
+        self.tempvar = ""
     
     def addAssembly(self,line):
         self.assembly.append(line)

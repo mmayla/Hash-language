@@ -103,7 +103,6 @@ def p_if_statement(p):
                      | HASH logical_expression compound_statement ELSE compound_statement
                      '''
     print("if statement")
-    # FIXME fix and revise
     if len(p)==6:
         p[0] = "if"
         idx = codegenerator.lastIndexOfInst("CMP")
@@ -125,14 +124,24 @@ def p_if_statement(p):
 
 # switch statement
 def p_switch_statement(p):
-    ''' switch_statement : AT ID AT left_brace switch_statement_body switch_statement_default right_brace
-                         | AT ID AT left_brace switch_statement_body right_brace
+    ''' switch_statement : switch_head left_brace switch_statement_body switch_statement_default right_brace
+                         | switch_head left_brace switch_statement_body right_brace
                          '''
     print("switch statement")
     if len(p)==8:
         p[0] = "switch"
+        codegenerator.addAssembly("label_end:")
     else:
         p[0] = "switch"
+        codegenerator.addAssembly("label_end:")
+    pass
+
+def p_switch_head(p):
+    ' switch_head : AT ID AT'
+    print("switch head")
+    p[0] = p[2]
+    codegenerator.tempvar = p[0]
+    #codegenerator.addAssembly(">"+str(p[2]))
     pass
 
 def p_switch_statement_body(p):
@@ -151,10 +160,20 @@ def p_switch_statement_case(p):
                               | NCONST COND statements_list
                               '''
     print("switch stmnt case")
-    if len(p)==5:
-        p[0] = "switch case"
-    else:
-        p[0] = "switch case"
+
+    p[0] = "switch case"
+    codegenerator.addAssembly("JMP label_end")
+
+    sidx = codegenerator.lastIndexOfInst("{")
+    eidx = codegenerator.lastIndexOfInst("#")
+    if sidx > eidx:
+        eidx = sidx
+
+    codegenerator.assembly.insert(eidx+1,"CMP "+codegenerator.tempvar+","+str(p[1]))
+    codegenerator.assembly.insert(eidx+2,"JE "+codegenerator.getNewLabel()+"_"+str(p[1]))
+    codegenerator.assembly.insert(eidx+3,"JMP"+ " label_end")
+    codegenerator.assembly.insert(eidx+4,codegenerator.getLabel()+"_"+str(p[1])+":")
+    codegenerator.addAssembly("#")
     pass
 
 def p_switch_statement_default(p):
@@ -164,8 +183,10 @@ def p_switch_statement_default(p):
     print("switch stmnt default")
     if len(p)==5:
         p[0] = "switch default"
+        #codegenerator.addAssembly("default")
     else:
         p[0] = "switch default"
+        #codegenerator.addAssembly("default")
     pass
 
 # assignment expressions
@@ -225,7 +246,7 @@ def p_arithmatic_expression(p):
     '''arithmatic_expression : ID arithmatic_operator arithmatic_expression
                              | const_number arithmatic_operator arithmatic_expression
                              | const_number
-                             | ID 
+                             | ID
                              '''
     print("Arth. Exp.")
     if len(p)==4:

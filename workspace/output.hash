@@ -1,6 +1,13 @@
-CMP in_var,fn_var
-JLT label1
-JMP outlabel1
-label1:
-ST sout_var,"first less than second"
-outlabel1:
+CMP i,1
+JE label1_1
+JMP label_end
+label1_1:
+ST sout_var,"i = 1"
+JMP label_end
+CMP i,2
+JE label2_2
+JMP label_end
+label2_2:
+ST sout_var,"i = 2"
+JMP label_end
+label_end:
