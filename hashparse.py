@@ -200,7 +200,7 @@ def p_logical_expression(p):
     if len(p)==5:
         p[0] = "***"
         codegenerator.addAssembly("CMP "+p[1]+","+p[3])
-        codegenerator.addAssembly("JE "+codegenerator.getNewLabel()) #FIXME JMP to real
+        codegenerator.addAssembly(p[2]+" "+codegenerator.getNewLabel())
     else :
         if p[1]=='$like':
             p[1]="1"
@@ -250,7 +250,20 @@ def p_logical_operator(p):
                          | NE
                          '''
     print("log. opr.")
-    p[0] = p[1]
+    if p[1]=="<":
+        p[0] = "JLT"
+    elif p[1]==">":
+        p[0] = "JGT"
+    elif p[1]=="<=":
+        p[0] = "JLE"
+    elif p[1]==">=":
+        p[0] = "JGE"
+    elif p[1]=="==":
+        p[0] = "JEQ"
+    elif p[1]=="!=":
+        p[0] = "JNE"
+    else:
+        p[0] = "JMP"
     pass
   
 def p_arithmatic_operator(p):
