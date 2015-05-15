@@ -69,7 +69,7 @@ def p_iteration_statement_2(p):
     sid = codegenerator.lastIndexOfInst("{")
     codegenerator.assembly.pop(sid)
     codegenerator.assembly.insert(sid,"JMP out"+codegenerator.getLabel())
-    
+    codegenerator.assembly.insert(sid+1,codegenerator.getLabel()+":")
     codegenerator.addAssembly("JMP loop-"+codegenerator.getLabel())
     codegenerator.addAssembly("out"+codegenerator.getLabel()+":")
     
@@ -433,7 +433,7 @@ def p_arithmatic_operator(p):
         p[0] = "SUB"
     elif p[1]=="*":
         p[0] = "MUL"
-    elif p[1]=="/":
+    elif p[1]=="~":
         p[0] = "DIV"
     elif p[1]=="%":
         p[0] = "MOD"
@@ -482,10 +482,11 @@ def p_data_type(p):
 
 
 def p_error(p):
-    msg = "Syntax error: Token ("+p.type+") at line: "+str(p.lineno)
-    print(msg)
-    #codegenerator.writeErrorFile("./workspace/error.out",p.lineno,msg)
-    codegenerator.errors.append(msg)
+    if p != None:
+        msg = "Syntax error: Token ("+str(p.type)+") at line: "+str(p.lineno)
+        print(msg)
+        #codegenerator.writeErrorFile("./workspace/error.out",p.lineno,msg)
+        codegenerator.errors.append(msg)
     pass
 
 ################ Testing Parser ################ 

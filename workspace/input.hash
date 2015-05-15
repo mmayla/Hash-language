@@ -1,17 +1,5 @@
-x $NUMBER = 15
-y $BOOLEAN = $like
-z $STRING = "shaba7"
-z=$like
-x="shaba7"
-y=5
-x = 3+y
+x $NUMBER = 5
+y $NUMBER = 3.14
+z $STRING = "I am a \"string\" \n"
 
-y=$like5
-
-y $NUMBER
-
-x $BOOLEAN
-
-# x > z ? {
-	z = "test"
-}
+x = 2+3~5
