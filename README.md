@@ -1,4 +1,43 @@
-# Hash-language
-Hash programming language
+# Hash language
+Hash programming language is a tiny programming language that use social terminologies as reserved keywords
+i.e. like and dislike instead of true and false
 
-Create your changes in a new branch then merge 
+# Code Sample
+in_var $NUMBER = 5
+fn_var $NUMBER = 3.14
+str_var $STRING = "I am a \"string\" \n"
+sout_var $STRING
+bool_var $BOOLEAN = $like
+
+
+\# in_var < fn_var {
+	sout_var = "first less than second"
+} $NO {
+	sout_var = "second less than first"
+}
+
+i $NUMBER = 0
+\#\# i <= 5 ? {
+	sout_var = i
+	i = i+1
+}
+
+i = 0
+\#\# {
+	sout_var = i
+	i = i+1
+} i<=5 ?
+
+\#\# k $NUMBER=0, k<5?, k=k+1 {
+	sout_var = k
+}
+
+@i@{
+  1 ? 
+		sout_var = "i = 1"
+	$leave
+	
+	2?
+		sout_var = "i = 2"
+	$leave
+}
